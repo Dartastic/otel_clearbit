@@ -1,15 +1,16 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_clearbit_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_clearbit';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class ClearbitResult {
+  /// Creates a result.
   const ClearbitResult({
     this.endpoint,
     this.lookupEmail,
@@ -97,8 +98,13 @@ class ClearbitResult {
   final int? statusCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class ClearbitCallResult<T> {
+  /// Creates a call result.
   const ClearbitCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final ClearbitResult? result;
 }
@@ -125,7 +131,7 @@ Future<T> tracedClearbit<T>({
   final span = _tracer().startSpan(
     'clearbit $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
@@ -133,139 +139,139 @@ Future<T> tracedClearbit<T>({
       final res = r.result!;
       final extras = <Attribute<Object>>[];
       if (res.endpoint != null) {
-        extras.add(OTel.attributeString('clearbit.endpoint', res.endpoint!));
+        extras.add(OTelAPI.attributeString('clearbit.endpoint', res.endpoint!));
       }
       if (res.lookupEmail != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.lookup.email',
           res.lookupEmail!,
         ));
       }
       if (res.lookupDomain != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.lookup.domain',
           res.lookupDomain!,
         ));
       }
       if (res.lookupIp != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.lookup.ip',
           res.lookupIp!,
         ));
       }
       if (res.matchKind != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.match.kind',
           res.matchKind!,
         ));
       }
       if (res.personId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.person.id',
           res.personId!,
         ));
       }
       if (res.companyId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.company.id',
           res.companyId!,
         ));
       }
       if (res.companyName != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.company.name',
           res.companyName!,
         ));
       }
       if (res.companyDomain != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.company.domain',
           res.companyDomain!,
         ));
       }
       if (res.companyEmployees != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'clearbit.company.employees',
           res.companyEmployees!,
         ));
       }
       if (res.companyAlexaRank != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'clearbit.company.alexa_rank',
           res.companyAlexaRank!,
         ));
       }
       if (res.industry != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.company.industry',
           res.industry!,
         ));
       }
       if (res.industryNaics != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.company.industry_naics',
           res.industryNaics!,
         ));
       }
       if (res.industrySic != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.company.industry_sic',
           res.industrySic!,
         ));
       }
       if (res.location != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.location',
           res.location!,
         ));
       }
       if (res.countryCode != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.country_code',
           res.countryCode!,
         ));
       }
       if (res.role != null) {
-        extras.add(OTel.attributeString('clearbit.person.role', res.role!));
+        extras.add(OTelAPI.attributeString('clearbit.person.role', res.role!));
       }
       if (res.seniority != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.person.seniority',
           res.seniority!,
         ));
       }
       if (res.revealKind != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.reveal.kind',
           res.revealKind!,
         ));
       }
       if (res.revealConfidence != null) {
-        extras.add(OTel.attributeDouble(
+        extras.add(OTelAPI.attributeDouble(
           'clearbit.reveal.confidence',
           res.revealConfidence!,
         ));
       }
       if (res.queuedForWebhook != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'clearbit.queued_for_webhook',
           res.queuedForWebhook!,
         ));
       }
       if (res.rateLimitRemaining != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'clearbit.rate_limit.remaining',
           res.rateLimitRemaining!,
         ));
       }
       if (res.creditsCharged != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'clearbit.credits.charged',
           res.creditsCharged!,
         ));
       }
       if (res.errorKind != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.error.kind',
           res.errorKind!,
         ));
@@ -274,13 +280,13 @@ Future<T> tracedClearbit<T>({
         }
       }
       if (res.errorMessage != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'clearbit.error.message',
           res.errorMessage!,
         ));
       }
       if (res.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           res.statusCode!,
         ));
@@ -291,13 +297,13 @@ Future<T> tracedClearbit<T>({
           );
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
